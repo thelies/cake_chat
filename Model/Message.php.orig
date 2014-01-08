@@ -1,0 +1,36 @@
+<<<<<<< HEAD
+<?php 
+	class Message extends AppModel{
+		public function getMessagesForThread($thread_id=null){
+			return $this->find('all', array(
+							'conditions'=>(array ('thread_id'=>$thread_id)),
+							'order'=>'id DESC'
+							));	
+		}	
+	}
+?>
+=======
+<?php 
+	class Message extends AppModel{
+		public function getMessagesForThread($thread_id=null){
+			$condition = array(
+				'joins' => array(
+				        array(
+					            'table' => 'users',
+					            'alias' => 'UserJoin',
+					            'type' => 'INNER',
+					            'conditions' => array(
+					                'UserJoin.user_id = Message.user_id',
+							'Message.thread_id'=>$thread_id
+					            )
+				        	)
+					//'condition'=> array ('Message.id'=>$thread_id)
+				    ),
+			    'fields' => array('UserJoin.username', 'Message.id', 'Message.content', 'Message.user_id', 'Message.Thread_id', 'Message.timestamp'),
+			    'order' => 'Message.id ASC'
+			);
+			return $this->find('all', $condition);	
+		}	
+	}
+?>
+>>>>>>> 3465679c080d8d1342cfc5625b5070ee7fbdd2cf
